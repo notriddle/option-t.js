@@ -45,7 +45,7 @@ import {Option, Some, None, OptionBase} from '../../src/Option';
                                              (v: number) => { return String(v); });
     var and: Option<string> = option.and(new Some<string>("bar"));
     var andThen: Option<string> = option.andThen((val: number): Option<string> => {
-        return new None<string>();
+        return new None();
     });
     var or: Option<number> = option.or(new Some<number>(10));
     var orElse: Option<number> = option.orElse((): Option<number> => {
@@ -61,7 +61,7 @@ import {Option, Some, None, OptionBase} from '../../src/Option';
 
 // `None<T>`
 (function(){
-    var option: None<number> = new None<number>();
+    var option: Option<number> = new None();
     var isSome: boolean = option.isSome;
     var isNone: boolean = option.isNone;
     var unwrap: number = option.unwrap();
@@ -70,14 +70,14 @@ import {Option, Some, None, OptionBase} from '../../src/Option';
     var expect: number = option.expect('barfoo');
     var map: Option<string> = option.map((val: number): string => String(val));
     var flatMap: Option<string> = option.flatMap((val: number): Option<string> => {
-        return new None<string>();
+        return new None();
     });
     var mapOr: string = option.mapOr("bar", (val: number): string => String(val));
     var mapOrElse: string = option.mapOrElse((): string => { return String(10); },
                                              (v: number) => { return String(v); });
     var and: Option<string> = option.and(new Some<string>("bar"));
     var andThen: Option<string> = option.andThen((val: number): Option<string> => {
-        return new None<string>();
+        return new None();
     });
     var or: Option<number> = option.or(new Some<number>(10));
     var orElse: Option<number> = option.orElse((): Option<number> => {
@@ -93,9 +93,9 @@ import {Option, Some, None, OptionBase} from '../../src/Option';
 
 // `Option<T>`
 (function(){
-    var option: Option<number> = new None<number>();
+    var option: Option<number> = new None();
     option = new Some(1);
 
     var option2: Option<string> = new Some('bar');
-    option2 = new None<string>();
+    option2 = new None();
 })();

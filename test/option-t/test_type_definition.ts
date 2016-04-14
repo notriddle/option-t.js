@@ -45,7 +45,7 @@ import {Option, Some, None, OptionBase} from 'option-t';
                                              (v: number) => { return String(v); });
     var and: OptionT.Option<string> = option.and(new Some<string>("bar"));
     var andThen: OptionT.Option<string> = option.andThen((val: number): OptionT.Option<string> => {
-        return new None<string>();
+        return new None();
     });
     var or: OptionT.Option<number> = option.or(new Some<number>(10));
     var orElse: OptionT.Option<number> = option.orElse((): OptionT.Option<number> => {
@@ -61,7 +61,7 @@ import {Option, Some, None, OptionBase} from 'option-t';
 
 // `None<T>`
 (function(){
-    var option: OptionT.None<number> = new None<number>();
+    var option: OptionT.Option<number> = new None();
     var isSome: boolean = option.isSome;
     var isNone: boolean = option.isNone;
     var unwrap: number = option.unwrap();
@@ -70,14 +70,14 @@ import {Option, Some, None, OptionBase} from 'option-t';
     var expect: number = option.expect('barfoo');
     var map: OptionT.Option<string> = option.map((val: number): string => String(val));
     var flatMap: OptionT.Option<string> = option.flatMap((val: number): OptionT.Option<string> => {
-        return new None<string>();
+        return new None();
     });
     var mapOr: string = option.mapOr("bar", (val: number): string => String(val));
     var mapOrElse: string = option.mapOrElse((): string => { return String(10); },
                                              (v: number) => { return String(v); });
     var and: OptionT.Option<string> = option.and(new Some<string>("bar"));
     var andThen: OptionT.Option<string> = option.andThen((val: number): OptionT.Option<string> => {
-        return new None<string>();
+        return new None();
     });
     var or: OptionT.Option<number> = option.or(new Some<number>(10));
     var orElse: OptionT.Option<number> = option.orElse((): OptionT.Option<number> => {
@@ -93,9 +93,9 @@ import {Option, Some, None, OptionBase} from 'option-t';
 
 // `Option<T>`
 (function(){
-    var option: OptionT.Option<number> = new None<number>();
+    var option: OptionT.Option<number> = new None();
     option = new Some(1);
 
     var option2: OptionT.Option<string> = new Some('bar');
-    option2 = new None<string>();
+    option2 = new None();
 })();

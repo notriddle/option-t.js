@@ -30,7 +30,7 @@ import {Result, Ok, Err, ResultBase} from '../../src/Result';
 
 //  Ok<T>
 (function(){
-    const result: Ok<number, void> = new Ok<number, void>(1);
+    const result: Result<number, void> = new Ok<number>(1);
 
     const isOk: boolean = result.isOk();
     const isErr: boolean = result.isErr();
@@ -41,15 +41,15 @@ import {Result, Ok, Err, ResultBase} from '../../src/Result';
     const map: Result<string, void> = result.map<string>((v: number) => String(v));
     const mapErr: Result<number, string> = result.mapErr<string>((v: void) => String(''));
 
-    const and1: Result<string, void> = result.and(new Ok<string, void>(''));
-    const and2: Result<string, void> = result.and(new Err<string, void>(null));
-    const andThen1: Result<string, void> = result.andThen<string>((v: number) => new Ok<string, void>(''));
-    const andThen2: Result<string, void> = result.andThen<string>((v: number) => new Err<string, void>(null));
+    const and1: Result<string, void> = result.and(new Ok<string>(''));
+    const and2: Result<string, void> = result.and(new Err<void>(null));
+    const andThen1: Result<string, void> = result.andThen<string>((v: number) => new Ok<string>(''));
+    const andThen2: Result<string, void> = result.andThen<string>((v: number) => new Err<void>(null));
 
-    const or1: Result<number, string> = result.or<string>(new Ok<number, string>(1));
-    const or2: Result<number, string> = result.or<string>(new Err<number, string>(null));
-    const orElse1: Result<number, string> = result.orElse<string>((e: void) => new Ok<number, string>(1));
-    const orElse2: Result<number, string> = result.orElse<string>((e: void) => new Err<number, string>(''));
+    const or1: Result<number, string> = result.or<string>(new Ok<number>(1));
+    const or2: Result<number, string> = result.or<string>(new Err<string>(null));
+    const orElse1: Result<number, string> = result.orElse<string>((e: void) => new Ok<number>(1));
+    const orElse2: Result<number, string> = result.orElse<string>((e: void) => new Err<string>(''));
 
     const unwrap: number = result.unwrap();
     const unwrapErr: void = result.unwrapErr();
@@ -68,7 +68,7 @@ import {Result, Ok, Err, ResultBase} from '../../src/Result';
 
 //  Err<E>
 (function(){
-    const result: Err<number, void> = new Err<number, void>(null);
+    const result: Result<number, void> = new Err<void>(null);
 
     const isOk: boolean = result.isOk();
     const isErr: boolean = result.isErr();
@@ -79,15 +79,15 @@ import {Result, Ok, Err, ResultBase} from '../../src/Result';
     const map: Result<string, void> = result.map<string>((v: number) => String(v));
     const mapErr: Result<number, string> = result.mapErr<string>((v: void) => String(''));
 
-    const and1: Result<string, void> = result.and(new Ok<string, void>(''));
-    const and2: Result<string, void> = result.and(new Err<string, void>(null));
-    const andThen1: Result<string, void> = result.andThen<string>((v: number) => new Ok<string, void>(''));
-    const andThen2: Result<string, void> = result.andThen<string>((v: number) => new Err<string, void>(null));
+    const and1: Result<string, void> = result.and(new Ok<string>(''));
+    const and2: Result<string, void> = result.and(new Err<void>(null));
+    const andThen1: Result<string, void> = result.andThen<string>((v: number) => new Ok<string>(''));
+    const andThen2: Result<string, void> = result.andThen<string>((v: number) => new Err<void>(null));
 
-    const or1: Result<number, string> = result.or<string>(new Ok<number, string>(1));
-    const or2: Result<number, string> = result.or<string>(new Err<number, string>(null));
-    const orElse1: Result<number, string> = result.orElse<string>((e: void) => new Ok<number, string>(1));
-    const orElse2: Result<number, string> = result.orElse<string>((e: void) => new Err<number, string>(''));
+    const or1: Result<number, string> = result.or<string>(new Ok<number>(1));
+    const or2: Result<number, string> = result.or<string>(new Err<string>(null));
+    const orElse1: Result<number, string> = result.orElse<string>((e: void) => new Ok<number>(1));
+    const orElse2: Result<number, string> = result.orElse<string>((e: void) => new Err<string>(''));
 
     const unwrap: number = result.unwrap();
     const unwrapErr: void = result.unwrapErr();
@@ -106,9 +106,9 @@ import {Result, Ok, Err, ResultBase} from '../../src/Result';
 
 //  Result<T, E>
 (function(){
-    let option: Result<void, void> = new Err<void, void>(null);
-    option = new Ok<void, void>(null);
+    let option: Result<void, void> = new Err<void>(null);
+    option = new Ok<void>(null);
 
-    let option2: Result<void, void> = new Ok<void, void>(null);
-    option2 = new Err<void, void>(null);
+    let option2: Result<void, void> = new Ok<void>(null);
+    option2 = new Err<void>(null);
 })();

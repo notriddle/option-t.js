@@ -28,7 +28,7 @@ declare module 'option-t' {
      *  The Option/Maybe type interface whose APIs are inspired
      *  by Rust's `std::option::Option<T>`.
      */
-    export type Option<T> = Some<T> | None<T>;
+    export type Option<T> = Some<T> | None;
     interface OptionMethods<T> {
 
         /**
@@ -202,22 +202,28 @@ declare module 'option-t' {
         drop(destructor?: (v: T) => void): void;
     }
 
-    class None<T> extends OptionBase implements OptionMethods<T> {
+    // XXX:
+    // This implementation is specialized to erase `None`'s type parameter `T`.
+    // In almost (maybe all) case, we write `a: Option<T> = new None()` explicitly,
+    // we don't use `None` as a type annotation of a variable.
+    // And we don't write `(new None()).map().orElse()` or such code.
+    // We always use `Option<T>` and its methods, not `Some<T>` or `None`' specialized ones.
+    class None extends OptionBase implements OptionMethods<any> {
         constructor();
         isSome: boolean;
         isNone: boolean;
-        unwrap(): T;
-        unwrapOr(def: T): T;
-        unwrapOrElse(fn: () => T): T;
-        expect(msg: string): T;
-        map<U>(fn: (v: T) => U): Option<U>;
-        flatMap<U>(fn: (v: T) => Option<U>): Option<U>;
-        mapOr<U>(def: U, fn: (v: T) => U): U;
-        mapOrElse<U>(def: () => U, fn: (v: T) => U): U;
+        unwrap(): any;
+        unwrapOr(def: any): any;
+        unwrapOrElse(fn: () => any): any;
+        expect(msg: string): any;
+        map<U>(fn: (v: any) => U): Option<U>;
+        flatMap<U>(fn: (v: any) => Option<U>): Option<U>;
+        mapOr<U>(def: U, fn: (v: any) => U): U;
+        mapOrElse<U>(def: () => U, fn: (v: any) => U): U;
         and<U>(optb: Option<U>): Option<U>;
-        andThen<U>(fn: (v: T) => Option<U>): Option<U>;
-        or(optb: Option<T>): Option<T>;
-        orElse(fn: () => Option<T>): Option<T>;
-        drop(destructor?: (v: T) => void): void;
+        andThen<U>(fn: (v: any) => Option<U>): Option<U>;
+        or(optb: Option<any>): Option<any>;
+        orElse(fn: () => Option<any>): Option<any>;
+        drop(destructor?: (v: any) => void): void;
     }
 }

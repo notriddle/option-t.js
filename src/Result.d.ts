@@ -33,18 +33,18 @@ type RecoveryFn<E, T> = (e: E) => T;
  *  The Result/Either type interface whose APIs are inspired
  *  by Rust's `std::result::Result<T, E>`.
  */
-export type Result<T, E> = Ok<T, E> | Err<T, E>;
+export type Result<T, E> = Ok<T> | Err<E>;
 
 interface ResultMethods<T, E> {
     /**
      *  Returns true if the result is `Ok`.
      */
-    isOk(): this is Ok<T, E>;
+    isOk(): this is Ok<T>;
 
     /**
      *  Returns true if the result is `Err`.
      */
-    isErr(): this is Err<T, E>;
+    isErr(): this is Err<E>;
 
     /**
      *  Converts from `Result<T, E>` to `Option<T>`.
@@ -150,58 +150,71 @@ interface ResultMethods<T, E> {
 // You MUST NOT use for other purpose.
 export abstract class ResultBase {}
 
-export class Ok<T, E> extends ResultBase implements ResultMethods<T, E> {
+// XXX:
+// This implementation is specialized to erase `Ok<T, E>`'s type parameter `E`.
+// In almost (maybe all) case, we write `a: Result<T, E> = new Ok<T>(e)` explicitly,
+// we don't use `Ok<T>` as a type annotation of a variable.
+// And we don't write `(new Ok()).map().orElse()` or such code.
+// We always use `Result<T, E>` and its methods, not `Ok<T>` or `Err<E>`' specialized ones.
+export class Ok<T> extends ResultBase implements ResultMethods<T, any> {
 
     private _is_ok: boolean;
     private _v: T;
-    private _e: E;
+    private _e: any;
 
     constructor(v: T);
 
-    isOk(): this is Ok<T, E>;
-    isErr(): this is Err<T, E>;
+    isOk(): this is Ok<T>;
+    isErr(): this is Err<any>;
     ok(): Option<T>;
-    err(): Option<E>;
-    map<U>(op: MapFn<T, U>): Result<U, E>;
-    mapErr<F>(op: MapFn<E, F>): Result<T, F>;
-    and<U>(res: Result<U, E>): Result<U, E>;
-    andThen<U>(op: FlatmapOkFn<T, U, E>): Result<U, E>;
+    err(): Option<any>;
+    map<U>(op: MapFn<T, U>): Result<U, any>;
+    mapErr<F>(op: MapFn<any, F>): Result<T, F>;
+    and<U>(res: Result<U, any>): Result<U, any>;
+    andThen<U>(op: FlatmapOkFn<T, U, any>): Result<U, any>;
     or<F>(res: Result<T, F>): Result<T, F>;
-    orElse<F>(op: FlatmapErrFn<T, E, F>): Result<T, F>;
+    orElse<F>(op: FlatmapErrFn<T, any, F>): Result<T, F>;
     unwrap(): T;
-    unwrapErr(): E;
+    unwrapErr(): any;
     unwrapOr(optb: T): T;
-    unwrapOrElse(op: RecoveryFn<E, T>): T;
+    unwrapOrElse(op: RecoveryFn<any, T>): T;
     expect(message: string): T;
-    drop(destructor?: (v: T) => void, errDestructor?: (e: E) => void): void;
+    drop(destructor?: (v: T) => void, errDestructor?: (e: any) => void): void;
 }
 
 // XXX:
 // This class intend to represent the container of some error type `E`.
 // So we don't define this as `Error`'s subclass
 // or don't restrict type parameter `E`'s upper bound to `Error`.
-export class Err<T, E> extends ResultBase implements ResultMethods<T, E> {
+//
+// XXX:
+// This implementation is specialized to erase `Err<T, E>`'s type parameter `T`.
+// In almost (maybe all) case, we write `a: Result<T, E> = new Err<E>(e)` explicitly,
+// we don't use `Err<E>` as a type annotation of a variable.
+// And we don't write `(new Err()).map().orElse()` or such code.
+// We always use `Result<T, E>` and its methods, not `Ok<T>` or `Err<E>`' specialized ones.
+export class Err<E> extends ResultBase implements ResultMethods<any, E> {
 
     private _is_ok: boolean;
-    private _v: T;
+    private _v: any;
     private _e: E;
 
     constructor(e: E);
 
-    isOk(): this is Ok<T, E>;
-    isErr(): this is Err<T, E>;
-    ok(): Option<T>;
+    isOk(): this is Ok<any>;
+    isErr(): this is Err<E>;
+    ok(): Option<any>;
     err(): Option<E>;
-    map<U>(op: MapFn<T, U>): Result<U, E>;
-    mapErr<F>(op: MapFn<E, F>): Result<T, F>;
+    map<U>(op: MapFn<any, U>): Result<U, E>;
+    mapErr<F>(op: MapFn<E, F>): Result<any, F>;
     and<U>(res: Result<U, E>): Result<U, E>;
-    andThen<U>(op: FlatmapOkFn<T, U, E>): Result<U, E>;
-    or<F>(res: Result<T, F>): Result<T, F>;
-    orElse<F>(op: FlatmapErrFn<T, E, F>): Result<T, F>;
-    unwrap(): T;
+    andThen<U>(op: FlatmapOkFn<any, U, E>): Result<U, E>;
+    or<F>(res: Result<any, F>): Result<any, F>;
+    orElse<F>(op: FlatmapErrFn<any, E, F>): Result<any, F>;
+    unwrap(): any;
     unwrapErr(): E;
-    unwrapOr(optb: T): T;
-    unwrapOrElse(op: RecoveryFn<E, T>): T;
-    expect(message: string): T;
-    drop(destructor?: (v: T) => void, errDestructor?: (e: E) => void): void;
+    unwrapOr(optb: any): any;
+    unwrapOrElse(op: RecoveryFn<E, any>): any;
+    expect(message: string): any;
+    drop(destructor?: (v: any) => void, errDestructor?: (e: E) => void): void;
 }
